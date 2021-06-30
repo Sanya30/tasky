@@ -1,7 +1,7 @@
 //parent element to store cards
 const taskContainer=document.querySelector(".task__container");//directly access html element
 //global store->to store card details
-const globalStore=[];
+let globalStore=[];
 
 
 //convert data to html card and changing dynamic data
@@ -10,7 +10,7 @@ const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>
 <div class="card">
   <div class="card-header d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i></button>
-<button type="button" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+<button type="button" class="btn btn-outline-danger"  id=${id} onclick="deleteCard.apply(this,arguments)"><i class="fas fa-trash" id=${id} onclick="deleteCard.apply(this,arguments)"></i></button>
   </div>
   <img src=${imageUrl} class="card-img-top" alt="...">
   <div class="card-body">
@@ -23,7 +23,7 @@ const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>
   </div>
 </div>
 </div>`;
-
+//2nd issue resolved
 const loadInitialTaskCards=()=>
 {
   //access localstorage
@@ -36,9 +36,15 @@ const loadInitialTaskCards=()=>
    const createNewCard=newCard(cardObject);
    taskContainer.insertAdjacentHTML("beforeend",createNewCard);
    globalStore.push(cardObject);
-  });
-};
+  }
+  );
 
+};
+//
+const updateLocalStorage=()=>
+{
+  localStorage.setItem("tasky",JSON.stringify({cards:globalStore}));
+};
 
 const saveChanges =() =>
 {
@@ -58,10 +64,35 @@ taskContainer.insertAdjacentHTML("beforeend",createNewCard);//insert card adjace
 globalStore.push(taskData);//we get an array of object
 //application programming interface
 //localstorage->interface->programming
-localStorage.setItem("tasky",JSON.stringify({cards:globalStore}));//setitem->adding item in local storage
-//as globalstore is an array so we convert it to object and then converting object to stringusig JSON
-//format->setItem("key->like Id",data);  //cards:[{}]
- 
+updateLocalStorage();
+};
+const deleteCard =(event)=>
+{
+//id
+event=window.event;//access exact element
+const targetID=event.target.id;
+const tagname=event.target.tagName;//to check whether clicking on button or icon
+//search globalStore array,then remove the object which matches with the id
+globalStore=globalStore.filter((cardObject)=>cardObject.id!==targetID);//cards having id not equal to target id will be filtered
+//loop over the new globalStore ang inject updated cards to DOM(this doesnt work)
+
+
+updateLocalStorage();//delete from root of local storage
+//access DOM to remove them
+//if click on button of delete
+if(tagname==="BUTTON")
+{
+  //task__container
+  return taskContainer.removeChild(
+    event.target.parentNode.parentNode.parentNode //col-lg-4
+  );
+}
+//if user click on icon of delete
+//task__container
+return taskContainer.removeChild(
+  event.target.parentNode.parentNode.parentNode.parentNode //col-lg-4
+);
+
 };
 //Issues
 //the modal was not closing upon adding new card
