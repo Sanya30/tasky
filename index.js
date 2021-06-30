@@ -19,7 +19,7 @@ const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>
     <span class="badge bg-primary">${taskType}</span>
   </div>
   <div class="card-footer text-muted">
-    <button type="button" class="btn btn-outline-primary float-end">Open Task</button>
+    <button type="button" class="btn btn-outline-primary float-end" id=${id}>Open Task</button>
   </div>
 </div>
 </div>`;
@@ -119,8 +119,50 @@ let submitButton=parentElement.childNodes[7].childNodes[1];
 taskTitle.setAttribute("contenteditable","true");
 taskDescription.setAttribute("contenteditable","true");
 taskType.setAttribute("contenteditable","true");
+submitButton.setAttribute("onclick","saveEditchanges.apply(this,arguments)");
 submitButton.innerHTML="Save Changes";
-}
+};
+
+
+const saveEditchanges=(event)=>
+{
+  event=window.event;//access exact element
+  const targetID=event.target.id;
+  const tagname=event.target.tagName;
+  let parentElement;
+  if(tagname==="BUTTON")
+  {
+    parentElement=event.target.parentNode.parentNode //refer to card
+  
+  }
+  else{
+    parentElement=event.target.parentNode.parentNode.parentNode
+  }
+  let taskTitle=parentElement.childNodes[5].childNodes[1];
+  let taskDescription=parentElement.childNodes[5].childNodes[3];
+  let taskType=parentElement.childNodes[5].childNodes[5];
+  let submitButton=parentElement.childNodes[7].childNodes[1];
+
+  const updatedData={
+    taskTitle:taskTitle.innerHTML;
+    taskType:taskTitle.innerHTML;
+    taskDescription:taskTitle.innerHTML;
+  };
+//update data in local storage and global
+globalStore=globalStore.msp((task)=>{
+  if(task.id===targetID){
+  return{
+    id:task.id,
+    imageUrl:task.imageUrl,
+    taskTitle:updatedData.taskTitle,
+    taskType:updatedData.taskType,
+    taskDescription:updatedData.taskDescription,
+  };
+  }
+  return task;//important
+});
+updateLocalStorage();
+};
 //Issues
 //the modal was not closing upon adding new card
 //the cards were deleted after refresh ->local storage(5MB)->browser storage
