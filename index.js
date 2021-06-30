@@ -144,12 +144,12 @@ const saveEditchanges=(event)=>
   let submitButton=parentElement.childNodes[7].childNodes[1];
 
   const updatedData={
-    taskTitle:taskTitle.innerHTML;
-    taskType:taskTitle.innerHTML;
-    taskDescription:taskTitle.innerHTML;
+    taskTitle:taskTitle.innerHTML,
+    taskType:taskTitle.innerHTML,
+    taskDescription:taskTitle.innerHTML,
   };
 //update data in local storage and global
-globalStore=globalStore.msp((task)=>{
+globalStore=globalStore.map((task)=>{
   if(task.id===targetID){
   return{
     id:task.id,
@@ -162,6 +162,12 @@ globalStore=globalStore.msp((task)=>{
   return task;//important
 });
 updateLocalStorage();
+//remove attribute
+taskTitle.setAttribute("contenteditable","false");
+taskDescription.setAttribute("contenteditable","false");
+taskType.setAttribute("contenteditable","false");
+submitButton.removeAttribute("onclick");
+submitButton.innerHTML="Open Task";
 };
 //Issues
 //the modal was not closing upon adding new card
