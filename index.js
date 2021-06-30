@@ -1,6 +1,8 @@
 //parent element to store cards
 const taskContainer=document.querySelector(".task__container");//directly access html element
-const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>`  <div class="col-md-6 col-lg-4" id=${id}>
+//convert data to html card and changing dynamic data
+const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>
+`  <div class="col-md-6 col-lg-4" id=${id}>
 <div class="card">
   <div class="card-header d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i></button>
@@ -31,5 +33,12 @@ const saveChanges =() =>
  //parent object of html->DOM->document
 const createNewCard=newCard(taskData);
 taskContainer.insertAdjacentHTML("beforeend",createNewCard);//insert card adjacently
-
 };
+//Issues
+//the modal was not closing upon adding new card
+//the cards were deleted after refresh 
+
+//features
+//delete modal feature
+//open task
+//Edit task
