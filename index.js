@@ -9,7 +9,7 @@ const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>
 `  <div class="col-md-6 col-lg-4" id=${id}>
 <div class="card">
   <div class="card-header d-flex justify-content-end gap-2">
-    <button type="button" class="btn btn-outline-success"><i class="fas fa-pencil-alt"></i></button>
+    <button type="button" class="btn btn-outline-success" id=${id} onclick="editCard.apply(this,arguments)"><i class="fas fa-pencil-alt" id=${id} onclick="editCard.apply(this,arguments)"></i></button>
 <button type="button" class="btn btn-outline-danger"  id=${id} onclick="deleteCard.apply(this,arguments)"><i class="fas fa-trash" id=${id} onclick="deleteCard.apply(this,arguments)"></i></button>
   </div>
   <img src=${imageUrl} class="card-img-top" alt="...">
@@ -78,6 +78,8 @@ globalStore=globalStore.filter((cardObject)=>cardObject.id!==targetID);//cards h
 
 
 updateLocalStorage();//delete from root of local storage
+
+
 //access DOM to remove them
 //if click on button of delete
 if(tagname==="BUTTON")
@@ -94,6 +96,31 @@ return taskContainer.removeChild(
 );
 
 };
+//contenteditable
+const editCard=(event)=>
+{
+  event=window.event;//access exact element
+const targetID=event.target.id;
+const tagname=event.target.tagName;
+let parentElement;
+if(tagname==="BUTTON")
+{
+  parentElement=event.target.parentNode.parentNode //refer to card
+
+}
+else{
+  parentElement=event.target.parentNode.parentNode.parentNode
+}
+let taskTitle=parentElement.childNodes[5].childNodes[1];
+let taskDescription=parentElement.childNodes[5].childNodes[3];
+let taskType=parentElement.childNodes[5].childNodes[5];
+let submitButton=parentElement.childNodes[7].childNodes[1];
+//set Attributes
+taskTitle.setAttribute("contenteditable","true");
+taskDescription.setAttribute("contenteditable","true");
+taskType.setAttribute("contenteditable","true");
+submitButton.innerHTML="Save Changes";
+}
 //Issues
 //the modal was not closing upon adding new card
 //the cards were deleted after refresh ->local storage(5MB)->browser storage
