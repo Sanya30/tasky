@@ -18,7 +18,7 @@
 <link href="styles.css" rel="stylesheet"/>
   <title>Tasky</title>
 </head>
-<body>
+<body onload="loadInitialTaskCards()">
   <!-- Modal=behaviour to provide alert or pop ups -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -47,6 +47,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!--when we click save changes it will dismiss and not generate the same card many times 1 issue resolved-->
         <button type="button" class="btn btn-primary" onclick="saveChanges()" data-bs-dismiss="modal">Save changes</button>
       </div>
     </div>

@@ -1,5 +1,9 @@
 //parent element to store cards
 const taskContainer=document.querySelector(".task__container");//directly access html element
+//global store->to store card details
+const globalStore=[];
+
+
 //convert data to html card and changing dynamic data
 const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>
 `  <div class="col-md-6 col-lg-4" id=${id}>
@@ -19,6 +23,23 @@ const newCard=({id,imageUrl,taskTitle,taskDescription,taskType})=>
   </div>
 </div>
 </div>`;
+
+const loadInitialTaskCards=()=>
+{
+  //access localstorage
+  const getInitialData=localStorage.getItem("tasky");//if null return
+  if(!getInitialData) return;//false
+  //convert stringify object to object
+  const {cards}=JSON.parse(getInitialData);
+  //map around the array to generate html card and inject to DOM
+  cards.map((cardObject)=>{
+   const createNewCard=newCard(cardObject);
+   taskContainer.insertAdjacentHTML("beforeend",createNewCard);
+   globalStore.push(cardObject);
+  });
+};
+
+
 const saveChanges =() =>
 {
  const taskData=
@@ -31,12 +52,20 @@ const saveChanges =() =>
  };
  //parent object in browser
  //parent object of html->DOM->document
+ //html code
 const createNewCard=newCard(taskData);
 taskContainer.insertAdjacentHTML("beforeend",createNewCard);//insert card adjacently
+globalStore.push(taskData);//we get an array of object
+//application programming interface
+//localstorage->interface->programming
+localStorage.setItem("tasky",JSON.stringify({cards:globalStore}));//setitem->adding item in local storage
+//as globalstore is an array so we convert it to object and then converting object to stringusig JSON
+//format->setItem("key->like Id",data);  //cards:[{}]
+ 
 };
 //Issues
 //the modal was not closing upon adding new card
-//the cards were deleted after refresh 
+//the cards were deleted after refresh ->local storage(5MB)->browser storage
 
 //features
 //delete modal feature
